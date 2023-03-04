@@ -9,7 +9,6 @@ import { usePopper } from "react-popper";
 import { Button } from "./Button";
 import { classNames } from "../utils";
 import { FormStyles } from "./FormStyles";
-import { forwardRef } from "react";
 import Fuse from "fuse.js";
 import { CommandGroup } from "./CommandGroup";
 
@@ -35,6 +34,7 @@ export interface FormDropdownProps {
   value?: DropdownItemProps;
   position?: "bottom-start" | "top-start";
   search?: boolean;
+  keyboardTriggeredPalette?: boolean;
 }
 
 export const FormDropdown: FC<FormDropdownProps> = (props) => {
@@ -45,7 +45,7 @@ export const FormDropdown: FC<FormDropdownProps> = (props) => {
   });
 
   // ------FOR COMMAND PALLET------
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(!props.keyboardTriggeredPalette);
   const [query, setQuery] = useState("");
 
   const fuse = new Fuse(props.items, { includeScore: true, keys: ["name"] });
@@ -56,6 +56,7 @@ export const FormDropdown: FC<FormDropdownProps> = (props) => {
       : fuse.search(query).map((res) => ({ ...res.item }));
 
   useEffect(() => {
+    if (!props.keyboardTriggeredPalette) return;
     const onKeydown = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
@@ -83,10 +84,12 @@ export const FormDropdown: FC<FormDropdownProps> = (props) => {
     <div className={props.className}>
       {props.search ? (
         <>
-          <div className="my-2">
-            <p className="text-sm">{props.label}</p>
-          </div>
-          <Transition.Root show={true}>
+          {isOpen && (
+            <div className="my-2">
+              <p className="text-sm">{props.label}</p>
+            </div>
+          )}
+          <Transition.Root show={isOpen}>
             <Transition.Child
               as={Fragment}
               enter="transition-opacity duration-100"
