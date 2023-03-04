@@ -5,17 +5,8 @@ import { Combobox } from "@headlessui/react";
 export const CommandGroup = ({ commands, group }: any) => {
   return (
     <React.Fragment>
-      {/* only show the header when there are commands belonging to this group */}
-      {commands.filter((command: any) => command.group === group).length >=
-        1 && (
-        <div className="flex items-center h-6 flex-shrink-0 bg-accent/50">
-          <span className="text-xs text-zinc-600 px-3.5 font-bold">
-            {group}
-          </span>
-        </div>
-      )}
       {commands
-        .filter((command: any) => command.group === group)
+        // .filter((command: any) => command.group === group)
         .map((command: any, idx: any) => (
           <Combobox.Option key={idx} value={command}>
             {({ active }) => (
@@ -34,7 +25,7 @@ export const CommandGroup = ({ commands, group }: any) => {
                   <span className="text-sm text-left flex flex-auto">
                     {command.name}
                   </span>
-                  <span className="text-[10px]">{command.shortcut}</span>
+                  <span className="text-[10px]">{command.rightText}</span>
                 </div>
               </div>
             )}

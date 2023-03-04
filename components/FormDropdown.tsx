@@ -1,5 +1,9 @@
 import { Combobox, Listbox, Transition } from "@headlessui/react";
-import { CheckIcon, ChevronDownIcon } from "@heroicons/react/outline";
+import {
+  CheckIcon,
+  ChevronDownIcon,
+  SearchIcon,
+} from "@heroicons/react/outline";
 import { FC, Fragment, ReactNode, useEffect, useState } from "react";
 import { usePopper } from "react-popper";
 import { Button } from "./Button";
@@ -12,6 +16,7 @@ import { CommandGroup } from "./CommandGroup";
 export interface DropdownItemProps {
   name: string;
   value: string | number;
+  rightText?: string;
   icon?: ReactNode;
   noCheck?: boolean;
 }
@@ -29,7 +34,7 @@ export interface FormDropdownProps {
   footer?: JSX.Element;
   value?: DropdownItemProps;
   position?: "bottom-start" | "top-start";
-  commands?: any;
+  // commands?: any;
   search?: boolean;
 }
 
@@ -44,11 +49,11 @@ export const FormDropdown: FC<FormDropdownProps> = (props) => {
   const [isOpen, setIsOpen] = useState(true);
   const [query, setQuery] = useState("");
 
-  const fuse = new Fuse(props.commands, { includeScore: true, keys: ["name"] });
+  const fuse = new Fuse(props.items, { includeScore: true, keys: ["name"] });
 
   const filteredCommands =
     query === ""
-      ? props.commands
+      ? props.items
       : fuse.search(query).map((res: any) => ({ ...res.item }));
 
   useEffect(() => {
@@ -65,7 +70,7 @@ export const FormDropdown: FC<FormDropdownProps> = (props) => {
 
     return () => {
       window.removeEventListener("keydown", onKeydown);
-      // setIsOpen(false);
+      setIsOpen(false);
     };
   }, []);
 
@@ -79,7 +84,7 @@ export const FormDropdown: FC<FormDropdownProps> = (props) => {
     <div className={props.className}>
       {props.search ? (
         <>
-          <Transition.Root show={isOpen}>
+          <Transition.Root show={true}>
             <Transition.Child
               as={Fragment}
               enter="transition-opacity duration-100"
@@ -95,17 +100,22 @@ export const FormDropdown: FC<FormDropdownProps> = (props) => {
                 className="border max-w-2xl mx-auto rounded-md relative flex flex-col"
                 onChange={(command: any) => {
                   console.log(command);
-                  // we have access to the selected command
-                  // a redirect can happen here or any action can be executed
-                  setIsOpen(false);
                 }}
               >
-                <div className="flex items-center text-lg font-medium border-b border-slate-500">
+                <div className="flex items-center justify-between text-lg font-medium border-b border-slate-500 gap-0">
+                  <div className="pl-3 pr-0">
+                    <SearchIcon width={20} />
+                  </div>
                   <Combobox.Input
-                    className="px-6 py-1 text-zinc-600 placeholder-zinc-400 text-sm w-full bg-transparent border-0 outline-none rounded-t-md active:outline-none focus:outline-none font-normal"
-                    placeholder="Type a command or search..."
+                    as={Fragment}
                     onChange={(e) => setQuery(e.target.value)}
-                  />
+                  >
+                    <input
+                      type="text"
+                      placeholder="Type a command or search..."
+                      className="pr-3 pl-3 py-1 text-zinc-600 placeholder-zinc-400 text-sm w-full bg-transparent border-0 outline-none rounded-t-md font-normal hover_styles"
+                    />
+                  </Combobox.Input>
                 </div>
 
                 <Combobox.Options
@@ -113,7 +123,7 @@ export const FormDropdown: FC<FormDropdownProps> = (props) => {
                   static
                 >
                   <CommandGroup commands={filteredCommands} group="Issue" />
-                  <CommandGroup commands={filteredCommands} group="Project" />
+                  {/* <CommandGroup commands={filteredCommands} group="Project" />
                   <CommandGroup commands={filteredCommands} group="Views" />
                   <CommandGroup commands={filteredCommands} group="Team" />
                   <CommandGroup commands={filteredCommands} group="Templates" />
@@ -122,7 +132,7 @@ export const FormDropdown: FC<FormDropdownProps> = (props) => {
                     group="Navigation"
                   />
                   <CommandGroup commands={filteredCommands} group="Settings" />
-                  <CommandGroup commands={filteredCommands} group="Account" />
+                  <CommandGroup commands={filteredCommands} group="Account" /> */}
                 </Combobox.Options>
               </Combobox>
             </Transition.Child>
