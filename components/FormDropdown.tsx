@@ -34,7 +34,6 @@ export interface FormDropdownProps {
   footer?: JSX.Element;
   value?: DropdownItemProps;
   position?: "bottom-start" | "top-start";
-  // commands?: any;
   search?: boolean;
 }
 
@@ -54,10 +53,10 @@ export const FormDropdown: FC<FormDropdownProps> = (props) => {
   const filteredCommands =
     query === ""
       ? props.items
-      : fuse.search(query).map((res: any) => ({ ...res.item }));
+      : fuse.search(query).map((res) => ({ ...res.item }));
 
   useEffect(() => {
-    const onKeydown = (e: any) => {
+    const onKeydown = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         setIsOpen(true);
@@ -84,6 +83,9 @@ export const FormDropdown: FC<FormDropdownProps> = (props) => {
     <div className={props.className}>
       {props.search ? (
         <>
+          <div className="my-2">
+            <p className="text-sm">{props.label}</p>
+          </div>
           <Transition.Root show={true}>
             <Transition.Child
               as={Fragment}
@@ -93,13 +95,13 @@ export const FormDropdown: FC<FormDropdownProps> = (props) => {
               leave="transition-opacity duration-100"
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
-              // afterLeave={() => {console.log("leaving...")}}
             >
               <Combobox
                 as="div"
                 className="border max-w-2xl mx-auto rounded-md relative flex flex-col"
-                onChange={(command: any) => {
+                onChange={(command: DropdownItemProps) => {
                   console.log(command);
+                  // do whatever you want with the command
                 }}
               >
                 <div className="flex items-center justify-between text-lg font-medium border-b border-slate-500 gap-0">
@@ -122,17 +124,7 @@ export const FormDropdown: FC<FormDropdownProps> = (props) => {
                   className="max-h-72 overflow-y-auto flex flex-col"
                   static
                 >
-                  <CommandGroup commands={filteredCommands} group="Issue" />
-                  {/* <CommandGroup commands={filteredCommands} group="Project" />
-                  <CommandGroup commands={filteredCommands} group="Views" />
-                  <CommandGroup commands={filteredCommands} group="Team" />
-                  <CommandGroup commands={filteredCommands} group="Templates" />
-                  <CommandGroup
-                    commands={filteredCommands}
-                    group="Navigation"
-                  />
-                  <CommandGroup commands={filteredCommands} group="Settings" />
-                  <CommandGroup commands={filteredCommands} group="Account" /> */}
+                  <CommandGroup commands={filteredCommands} />
                 </Combobox.Options>
               </Combobox>
             </Transition.Child>
