@@ -28,7 +28,6 @@ const Home: NextPage = () => {
           value: "weekly",
         }}
         disabled={false}
-        keyboardTriggeredPalette={true}
         onChange={() => {}}
       />
     </div>

@@ -1,18 +1,63 @@
-# Next.js + TailwindCSS
+# React Dropdown/ Searchable Palette
 
-Next.js Documentation: https://nextjs.org/docs<br>
-TailwindCSS Documentation: https://tailwindcss.com/docs/utility-first
+## Default dropdown menu (Basic select box)
 
-Next.js: The React Framework
-for Production.
-Next.js gives you the best developer experience with all the features you need for production: hybrid static & server rendering, TypeScript support, smart bundling, route pre-fetching, and more. No config needed.
+```jsx
+<FormDropdown
+  className="max-w-[400px] m-auto"
+  label="Salary Period"
+  id="about"
+  items={[
+    {
+      name: "Hourly",
+      value: "hourly",
+      rightText: "per hour",
+      icon: <ClockIcon />,
+    },
+    {
+      name: "Weekly",
+      value: "weekly",
+      rightText: "per hour",
+      icon: <CloudIcon />,
+    },
+  ]}
+  value={{
+    name: "Weekly",
+    value: "weekly",
+  }}
+  disabled={false}
+  onChange={() => {}}
+/>
+```
 
-Tailwind is a utility-first CSS framework packed with classes like `flex`, `pt-4`, `text-center` and `rotate-90` that can be composed to build any design, directly in your markup.
+## Searchable command palette
 
-Example:
-```html
-<div className="bg-slate-800 text-xl p-2 border border-gray-100">
-  <p className="m-2 text-white">TailwindCSS and Next.js</p>
-  <a href="..." className="text-red-300">Visit the documentation</a>
-</div>
+```jsx
+<FormDropdown
+  className="max-w-[400px] m-auto"
+  label="Salary Period"
+  id="about"
+  items={[
+    {
+      name: "Hourly",
+      value: "hourly",
+      rightText: "per hour",
+      icon: <ClockIcon />,
+    },
+    {
+      name: "Weekly",
+      value: "weekly",
+      rightText: "per hour",
+      icon: <CloudIcon />,
+    },
+  ]}
+  value={{
+    name: "Weekly",
+    value: "weekly",
+  }}
+  search={true}
+  keyboardTriggered={true} // enabling this will mount the control on hitting CMD + K, `completely optional`
+  disabled={false}
+  onChange={() => {}}
+/>
 ```
