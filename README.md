@@ -1,63 +1,51 @@
 # React Dropdown/ Searchable Palette
 
+## Define the prerequsites for it first
+
+```tsx
+export const items = [
+  {
+    name: "Select a period",
+    value: "-",
+  },
+  {
+    name: "Hourly",
+    value: "hourly",
+  },
+  {
+    name: "Weekly",
+    value: "weekly",
+  },
+];
+
+const [value, setValue] = useState<DropdownItemProps | undefined>(items[0]);
+```
+
 ## Default dropdown menu (Basic select box)
 
-```jsx
+```tsx
 <FormDropdown
   className="max-w-[400px] m-auto"
   label="Salary Period"
   id="about"
-  items={[
-    {
-      name: "Hourly",
-      value: "hourly",
-      rightText: "per hour",
-      icon: <ClockIcon />,
-    },
-    {
-      name: "Weekly",
-      value: "weekly",
-      rightText: "per hour",
-      icon: <CloudIcon />,
-    },
-  ]}
-  value={{
-    name: "Weekly",
-    value: "weekly",
-  }}
+  items={items}
+  value={value}
   disabled={false}
-  onChange={() => {}}
+  onChange={setValue}
 />
 ```
 
 ## Searchable command palette
 
-```jsx
+```tsx
 <FormDropdown
   className="max-w-[400px] m-auto"
   label="Salary Period"
   id="about"
-  items={[
-    {
-      name: "Hourly",
-      value: "hourly",
-      rightText: "per hour",
-      icon: <ClockIcon />,
-    },
-    {
-      name: "Weekly",
-      value: "weekly",
-      rightText: "per hour",
-      icon: <CloudIcon />,
-    },
-  ]}
-  value={{
-    name: "Weekly",
-    value: "weekly",
-  }}
+  items={items}
+  value={value}
   search={true}
-  keyboardTriggered={true} // enabling this will mount the control on hitting CMD + K, `completely optional`
   disabled={false}
-  onChange={() => {}}
+  onChange={setValue}
 />
 ```
