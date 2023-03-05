@@ -4,10 +4,6 @@ import { DropdownItemProps, FormDropdown } from "../components/FormDropdown";
 
 export const items = [
   {
-    name: "Select a period",
-    value: "-",
-  },
-  {
     name: "Hourly",
     value: "hourly",
   },
@@ -18,17 +14,18 @@ export const items = [
 ];
 
 const Home: NextPage = () => {
-  const [value, setValue] = useState<DropdownItemProps | undefined>(items[0]);
+  const [value, setValue] = useState<DropdownItemProps | undefined>(undefined);
 
   return (
     <div className="px-10 py-10">
       <FormDropdown
+        placeholder="Select an option"
         className="max-w-[400px] m-auto"
         label="Salary Period"
         id="about"
         items={items}
         value={value}
-        // search={true}
+        search={true}
         disabled={false}
         onChange={setValue}
       />

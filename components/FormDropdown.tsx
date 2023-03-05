@@ -5,7 +5,7 @@ import {
   SearchIcon,
 } from "@heroicons/react/outline";
 import Fuse from "fuse.js";
-import { FC, Fragment, ReactNode, useState } from "react";
+import { FC, Fragment, ReactNode, useEffect, useRef, useState } from "react";
 import { usePopper } from "react-popper";
 import { classNames } from "../utils";
 import { Button } from "./Button";
@@ -37,6 +37,7 @@ export interface FormDropdownProps {
 
 export const FormDropdown: FC<FormDropdownProps> = (props) => {
   const [query, setQuery] = useState("");
+  const dropdownInputRef = useRef<HTMLInputElement | null>(null);
   const [referenceElement, setReferenceElement] = useState<HTMLElement>();
   const [popperElement, setPopperElement] = useState<HTMLElement>();
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
@@ -46,14 +47,19 @@ export const FormDropdown: FC<FormDropdownProps> = (props) => {
   if (props.items.length === 0) {
     throw new Error("FormDropdown must have at least one item");
   }
-  const items = props.items.slice(1);
 
-  const fuse = new Fuse(items, { includeScore: true, keys: ["name"] });
+  const fuse = new Fuse(props.items, { includeScore: true, keys: ["name"] });
 
   const filteredResults =
     query === ""
       ? props.items
       : fuse.search(query).map((res) => ({ ...res.item }));
+
+  useEffect(() => {
+    if (dropdownInputRef.current) {
+      dropdownInputRef.current.focus();
+    }
+  }, [popperElement]);
 
   return (
     <div className={props.className}>
@@ -67,6 +73,7 @@ export const FormDropdown: FC<FormDropdownProps> = (props) => {
           </label>
         )}
         <Listbox
+          defaultValue={"Select"}
           multiple={false}
           disabled={props.disabled}
           value={props.value?.value}
@@ -83,7 +90,8 @@ export const FormDropdown: FC<FormDropdownProps> = (props) => {
               className={classNames(
                 props.buttonClassName ?? "",
                 FormStyles({ disabled: props.disabled, hasError: false }),
-                "!shadow-none !rounded-md "
+                "!shadow-none !rounded-md ",
+                "placeholder-black"
               )}
             >
               <span className="block truncate">
@@ -115,6 +123,7 @@ export const FormDropdown: FC<FormDropdownProps> = (props) => {
               leaveTo="opacity-0"
             >
               <Listbox.Options
+                placeholder="Select an option"
                 className={classNames(
                   "absolute z-10 mt-2 max-h-[300px] w-full min-w-fit overflow-auto bg-white text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm rounded-t-md",
                   props.optionsContainerClassName
@@ -136,6 +145,7 @@ export const FormDropdown: FC<FormDropdownProps> = (props) => {
                     </div>
                     <input
                       value={query}
+                      ref={dropdownInputRef}
                       onChange={(e) => setQuery(e.target.value)}
                       type="text"
                       className="w-full border-none outline-none shadow-none focus-styles px-0 pl-0.5 rounded-tr-md"
